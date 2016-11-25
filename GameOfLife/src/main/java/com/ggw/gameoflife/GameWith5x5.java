@@ -4,13 +4,13 @@ import java.util.concurrent.ThreadLocalRandom;
 
 public class GameWith5x5 {
 
-	public boolean[][] orgmap = new boolean[5][5];
 	public boolean[][] map = new boolean[5][5];
+	public boolean[][] nextmap = new boolean[5][5];
 	
 	public GameWith5x5() {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j ++) {
-				orgmap[i][j] = ThreadLocalRandom.current().nextBoolean();
+				map[i][j] = ThreadLocalRandom.current().nextBoolean();
 			}
 		}
 	}
@@ -18,7 +18,7 @@ public class GameWith5x5 {
 	public void print() {
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j ++) {
-				System.out.print((orgmap[i][j] ? 1 : 0) + "	");
+				System.out.print((map[i][j] ? 1 : 0) + "	");
 			}
 			System.out.println();
 		}
@@ -33,20 +33,20 @@ public class GameWith5x5 {
 	}
 	
 	public void next() {
-		copy(orgmap, map);
+		copy(map, nextmap);
 		for (int i = 0; i < 5; i++) {
 			for (int j = 0; j < 5; j ++) {
-				boolean current = map[i][j];
+				boolean current = nextmap[i][j];
 				int n = getCnt(i, j);
 				if (current) {
 					if (n < 2 || n > 3)
-						map[i][j] = false;
+						nextmap[i][j] = false;
 				} else if (n == 3) {
-					map[i][j] = true;
+					nextmap[i][j] = true;
 				}
 			}
 		}
-		copy(map, orgmap);
+		copy(nextmap, map);
 	}
 	
 	private int getCnt(int i, int j) {
@@ -64,7 +64,7 @@ public class GameWith5x5 {
 	
 	private boolean chkNode(int i, int j) {
 		try {
-			return orgmap[i][j];
+			return map[i][j];
 		} catch (Exception e) {
 			return false;
 		}
@@ -76,9 +76,13 @@ public class GameWith5x5 {
 		app.print();
 		System.out.println("#################################");
 		
-		app.next();
-		app.print();
-		System.out.println("#################################");
+		while (true) {
+			app.next();
+			app.print();
+			System.out.println("#################################");
+			Thread.sleep(500);
+		}
+		
 	}
 	
 }
